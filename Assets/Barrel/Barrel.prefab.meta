@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 96e82463b7d46344295e9a965beb41f9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 840
+  packageName: Barrel
+  packageVersion: 3.0
+  assetPath: Assets/Barrel/Barrel.prefab
+  uploadId: 25854
