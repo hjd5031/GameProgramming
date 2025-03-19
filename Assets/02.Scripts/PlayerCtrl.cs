@@ -2,18 +2,20 @@ using UnityEngine;
 
 public class PlayerCtrl : MonoBehaviour
 {
+    //References
+    private Transform _tr;
+    private Animation _anim;
+    
+    [Header("Attributes")]
     public float velocity;
     public float rotationSpeed;
     
-    private Transform tr;
-    private Animation anim;
     
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        tr = GetComponent<Transform>();
-        anim = GetComponent<Animation>();
-        anim.Play("Idle");
+        _tr = GetComponent<Transform>();
+        _anim = GetComponent<Animation>();
+        _anim.Play("Idle");
     }
 
     // Update is called once per frame
@@ -25,31 +27,32 @@ public class PlayerCtrl : MonoBehaviour
         
         // 마우스 X 축 이동값 가져오기 (좌우)
         float r = Input.GetAxis("Mouse X");
-        // Translate(tr, Space.Self);
         // WASD 키 입력에 따라 이동 (Z축 방향으로)
         if (h != 0 || v != 0)
         {
+            Debug.Log("h = "+h+"v = "+v);
             // 로컬 좌표계 기준으로 이동 (Z축 방향으로)
             Vector3 moveDirection = new Vector3(h, 0, v);
-            tr.Translate(moveDirection * Time.deltaTime * velocity, Space.Self);
+            _tr.Translate(moveDirection * Time.deltaTime * velocity, Space.Self);
         }
         // 마우스 이동값에 따라 회전 (Y축 회전)
         if (r != 0)
         {
-            tr.Rotate(Vector3.up * r * Time.deltaTime * rotationSpeed);
+            Debug.Log("r = " + r);
+            _tr.Rotate(Vector3.up * r * Time.deltaTime * rotationSpeed);
         }
-        PlayerAnimaiton(v,h);
+        StartPlayerAnim(v,h);
     }
 
-    private void PlayerAnimaiton(float v, float h)
+    private void StartPlayerAnim(float v, float h)
     {
-        if(v>0)anim.CrossFade("RunF",0.25f);
+        if(v>0)_anim.CrossFade("RunF",0.25f);
         
-        if(v<0)anim.CrossFade("RunB",0.25f);
+        if(v<0)_anim.CrossFade("RunB",0.25f);
         
-        if(h>0)anim.CrossFade("RunL",0.25f);
+        if(h>0)_anim.CrossFade("RunL",0.25f);
         
-        if(h<0)anim.CrossFade("RunR",0.25f);
-        if(h == 0 && v == 0)anim.CrossFade("Idle",0.25f);
+        if(h<0)_anim.CrossFade("RunR",0.25f);
+        if(h == 0 && v == 0)_anim.CrossFade("Idle",0.25f);
     }
 }
