@@ -12,10 +12,10 @@ public class BulletCtrl : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _rb.AddForce(transform.forward * force);
-        StartCoroutine("removebullet");
+        StartCoroutine("RemoveBullet");
     }
 
-    IEnumerator removebullet()
+    IEnumerator RemoveBullet()
     {
         yield return new WaitForSeconds(5.0f);
         Destroy(this.gameObject);
