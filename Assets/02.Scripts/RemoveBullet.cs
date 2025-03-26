@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class RemoveBullet : MonoBehaviour
 {
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,8 +16,8 @@ public class RemoveBullet : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.CompareTag("Bullet"))
+    {  
+      if (collision.collider.CompareTag("Bullet"))
         {
             Destroy(collision.gameObject);
         }
