@@ -36,30 +36,56 @@ public class BarrelHit : MonoBehaviour
     {
         ContactPoint cp = collision.GetContact(0);
         Quaternion rot = Quaternion.LookRotation(-cp.normal);
-        if (hp == 2)
+        switch (hp)
         {
-            _smoke1 = Instantiate(explosionEffect[0], cp.point, rot);
+            case 2:_smoke1 = Instantiate(explosionEffect[0], cp.point, rot); break;
+            case 1:_smoke2 = Instantiate(explosionEffect[0], cp.point, rot); break;
+            case 0:
+            {
+                _flame = Instantiate(explosionEffect[1], cp.point, rot);
+                StartCoroutine("StartExplosion");
+            }
+                break;
+            case -1:
+            {
+                StopCoroutine("StartExplosion");
+                BarrelFinalExplosion();
+            }
+                break;
+            
         }
-        if (hp == 1)
-        {
-            _smoke2 = Instantiate(explosionEffect[0], cp.point, rot);
-        }
-        if (hp == 0)
-        {
-            _flame = Instantiate(explosionEffect[1], cp.point, rot);
-            StartCoroutine("StartExplosion");
-        }
+        // if (hp == 2)
+        // {
+        //     _smoke1 = Instantiate(explosionEffect[0], cp.point, rot);
+        // }
+        // if (hp == 1)
+        // {
+        //     _smoke2 = Instantiate(explosionEffect[0], cp.point, rot);
+        // }
+        // if (hp == 0)
+        // {
+        //     _flame = Instantiate(explosionEffect[1], cp.point, rot);
+        //     StartCoroutine("StartExplosion");
+        // }
+        // if (hp == -1)
+        // {
+        //     StopCoroutine("StartExplosion");
+        //     BarrelFinalExplosion();
+        // }
     }
 
-    IEnumerator StartExplosion()
+    private void BarrelFinalExplosion()
     {
-        yield return new WaitForSeconds(3f);
         Destroy(_smoke1);
         Destroy(_smoke2);
         Destroy(_flame);
         _explosion = Instantiate(explosionEffect[2], transform.position, Quaternion.identity);
         Destroy(_explosion,3f);
         Destroy(this.gameObject);
-
+    }
+    IEnumerator StartExplosion()
+    {
+        yield return new WaitForSeconds(3f);
+        BarrelFinalExplosion();
     }
 }
