@@ -39,10 +39,10 @@ public class PlayerCtrl : MonoBehaviour
         }
 
         // 애니메이션 처리
-        StartPlayerAnim(v, h,r);
+        StartPlayerAnim(v, h);
     }
 
-    private void StartPlayerAnim(float v, float h, float r)
+    private void StartPlayerAnim(float v, float h)
     {
         // if (Input.GetMouseButton(0))
         // {
@@ -68,8 +68,8 @@ public class PlayerCtrl : MonoBehaviour
         // {
             if (v > 0) _anim.CrossFade("RunF", 0.25f);
             else if (v < 0) _anim.CrossFade("RunB", 0.25f);
-            else if (h > 0||r<0) _anim.CrossFade("RunL", 0.25f);
-            else if (h < 0||r>0) _anim.CrossFade("RunR", 0.25f);
+            else if (h > 0) _anim.CrossFade("RunL", 0.25f);
+            else if (h < 0) _anim.CrossFade("RunR", 0.25f);
             else _anim.CrossFade("Idle", 0.25f);
         // }
     }
