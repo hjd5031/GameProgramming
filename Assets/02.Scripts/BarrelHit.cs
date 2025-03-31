@@ -6,14 +6,20 @@ public class BarrelHit : MonoBehaviour
 {
     [FormerlySerializedAs("_hp")] public int hp;
     [FormerlySerializedAs("sparkEffect")] public GameObject[] explosionEffect;
-
+    public Texture[] textures;
+    private MeshRenderer _renderer;
     private GameObject _explosion;
     private GameObject _flame;
     private GameObject _smoke1;
     private GameObject _smoke2;
+    private Rigidbody _rb;
+    private float _radius = 10f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _renderer = GetComponentInChildren<MeshRenderer>();
+        int idx = Random.Range(0, textures.Length);
+        _renderer.material.mainTexture = textures[idx];
         hp = 3;
     }
 
@@ -54,38 +60,55 @@ public class BarrelHit : MonoBehaviour
                 break;
             
         }
-        // if (hp == 2)
-        // {
-        //     _smoke1 = Instantiate(explosionEffect[0], cp.point, rot);
-        // }
-        // if (hp == 1)
-        // {
-        //     _smoke2 = Instantiate(explosionEffect[0], cp.point, rot);
-        // }
-        // if (hp == 0)
-        // {
-        //     _flame = Instantiate(explosionEffect[1], cp.point, rot);
-        //     StartCoroutine("StartExplosion");
-        // }
-        // if (hp == -1)
-        // {
-        //     StopCoroutine("StartExplosion");
-        //     BarrelFinalExplosion();
-        // }
     }
 
     private void BarrelFinalExplosion()
     {
-        Destroy(_smoke1);
-        Destroy(_smoke2);
-        Destroy(_flame);
+        if(_flame != null)Destroy(_flame);
+        if(_smoke1 != null)Destroy(_smoke1);
+        if(_smoke2 != null)Destroy(_smoke2);
+        
+        IndirectDamage(this.gameObject.transform.position);
         _explosion = Instantiate(explosionEffect[2], transform.position, Quaternion.identity);
         Destroy(_explosion,3f);
-        Destroy(this.gameObject);
+        Destroy(this.gameObject,3f);
     }
     IEnumerator StartExplosion()
     {
         yield return new WaitForSeconds(3f);
         BarrelFinalExplosion();
+    }
+
+    void IndirectDamage(Vector3 pos)
+    {
+        Collider[] colls = Physics.OverlapSphere(pos, _radius, 1<<3);
+        foreach (var coll in colls)
+        {
+            _rb = coll.GetComponent<Rigidbody>();
+            _rb.mass = 1.0f;
+            _rb.constraints = RigidbodyConstraints.None;
+            _rb.AddExplosionForce(1500.0f, new Vector3(pos.x+1, pos.y, pos.z), _radius, 1200.0f);
+        }
+        foreach (var coll in colls)
+        {
+            _rb = coll.GetComponent<Rigidbody>();
+            StartCoroutine("RecoverMass",_rb);
+        }
+        
+    }
+
+    IEnumerator RecoverMass(Rigidbody rb)
+    {
+        
+        
+
+        while (rb.mass <= 20000f)
+        {
+            rb.mass += Time.deltaTime * 5000f;
+            yield return null;
+        }
+        rb.constraints = RigidbodyConstraints.FreezeRotationX;
+        rb.constraints = RigidbodyConstraints.FreezeRotationZ;
+        
     }
 }

@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 3
   tags:
   - Bullet
+  - Barrel
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Barrel
   - Water
   - UI
   - 
