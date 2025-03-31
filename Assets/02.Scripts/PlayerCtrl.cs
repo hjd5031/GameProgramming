@@ -1,21 +1,26 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerCtrl : MonoBehaviour
 {
     private Transform _tr;
     private Animation _anim;
-
+    // [FormerlySerializedAs("_muzzleFlash")] public GameObject muzzleFlash; 
     [Header("Attributes")]
     public float velocity;
     public float rotationSpeed;
 
-    private float lastFireTime = -1.0f;          // 마지막 발사 시각
-    private float fireCooldown = 0.5f;        // 발사 쿨타임 (초 단위)
+    // private float lastFireTime = -1.0f;          // 마지막 발사 시각
+    // private float fireCooldown = 0.5f;        // 발사 쿨타임 (초 단위)
 
     void Start()
     {
         _tr = GetComponent<Transform>();
         _anim = GetComponent<Animation>();
+        // muzzleFlash.SetActive(false);
+
+        // muzzleFlash = GetComponent<GameObject>();
         _anim.Play("Idle");
     }
 
