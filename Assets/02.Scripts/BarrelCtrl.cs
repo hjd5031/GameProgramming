@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class BarrelHit : MonoBehaviour
+public class BarrelCtrl : MonoBehaviour
 {
     [FormerlySerializedAs("_hp")] public int hp;
     [FormerlySerializedAs("sparkEffect")] public GameObject[] explosionEffect;
@@ -48,7 +48,7 @@ public class BarrelHit : MonoBehaviour
             case 1:_smoke2 = Instantiate(explosionEffect[0], cp.point, rot); break;
             case 0:
             {
-                _flame = Instantiate(explosionEffect[1], cp.point, rot);
+                _flame = Instantiate(explosionEffect[1], cp.point, rot,this.transform);
                 StartCoroutine("StartExplosion");
             }
                 break;
@@ -68,10 +68,10 @@ public class BarrelHit : MonoBehaviour
         if(_smoke1 != null)Destroy(_smoke1);
         if(_smoke2 != null)Destroy(_smoke2);
         
-        IndirectDamage(this.gameObject.transform.position);
+        IndirectDamage(gameObject.transform.position);
         _explosion = Instantiate(explosionEffect[2], transform.position, Quaternion.identity);
         Destroy(_explosion,3f);
-        Destroy(this.gameObject,3f);
+        Destroy(gameObject,3f);
     }
     IEnumerator StartExplosion()
     {
@@ -88,27 +88,25 @@ public class BarrelHit : MonoBehaviour
             _rb.mass = 1.0f;
             _rb.constraints = RigidbodyConstraints.None;
             _rb.AddExplosionForce(1500.0f, new Vector3(pos.x+1, pos.y, pos.z), _radius, 1200.0f);
-        }
-        foreach (var coll in colls)
-        {
-            _rb = coll.GetComponent<Rigidbody>();
             StartCoroutine("RecoverMass",_rb);
+            StartCoroutine("FreezePosition",_rb);
         }
-        
     }
 
     IEnumerator RecoverMass(Rigidbody rb)
-    {
-        
-        
-
+    { 
         while (rb.mass <= 20000f)
         {
             rb.mass += Time.deltaTime * 5000f;
             yield return null;
         }
-        rb.constraints = RigidbodyConstraints.FreezeRotationX;
-        rb.constraints = RigidbodyConstraints.FreezeRotationZ;
+    }
+    IEnumerator FreezePosition(Rigidbody rb)
+    {
+        Debug.Log("BeingRecovered");
         
+        yield return new WaitForSeconds(3f);
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        Debug.Log("Recovered");
     }
 }

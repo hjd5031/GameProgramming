@@ -8,14 +8,15 @@ public class BulletFire : MonoBehaviour
     private Animation _anim;
     public GameObject muzzleFlash;
     public AudioClip fireSfx;           // 총 발사 소리
+    
+    
     private AudioSource audioSource;    // AudioSource 컴포넌트
     private float lastFireTime = -1.0f;          // 마지막 발사 시각
     [SerializeField]private float fireCooldown = 0.2f;        // 발사 쿨타임 (초 단위)
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
+    
     void Start()
     {
-        _anim = GetComponent<Animation>();
-        _anim.Play();
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();
@@ -36,11 +37,11 @@ public class BulletFire : MonoBehaviour
                 lastFireTime = Time.time;
 
                 FireBullet();
-                Debug.Log("발사!");
+                // Debug.Log("발사!");
             }
             else
             {
-                Debug.Log("쿨타임 중입니다...");
+                // Debug.Log("쿨타임 중입니다...");
             }
         }
     }
@@ -52,8 +53,6 @@ public class BulletFire : MonoBehaviour
         if (fireSfx != null)
             audioSource.PlayOneShot(fireSfx);
         StartCoroutine("ShowMuzzleFlash");
-        _anim.Play("IdleFireSMG");
-        // Rigidbody rb = bullet.GetComponent<Rigidbody>();
     }
     IEnumerator ShowMuzzleFlash()
     {
