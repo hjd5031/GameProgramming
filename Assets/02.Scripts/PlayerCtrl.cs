@@ -4,23 +4,18 @@ using UnityEngine.Serialization;
 
 public class PlayerCtrl : MonoBehaviour
 {
+    [Header("References")]
     private Transform _tr;
     private Animation _anim;
-    // [FormerlySerializedAs("_muzzleFlash")] public GameObject muzzleFlash; 
+     
     [Header("Attributes")]
-    public float velocity;
-    public float rotationSpeed;
-
-    // private float lastFireTime = -1.0f;          // 마지막 발사 시각
-    // private float fireCooldown = 0.5f;        // 발사 쿨타임 (초 단위)
-
+    [SerializeField]private float velocity;
+    [SerializeField]private float rotationSpeed;
+    
     void Start()
     {
         _tr = GetComponent<Transform>();
         _anim = GetComponent<Animation>();
-        // muzzleFlash.SetActive(false);
-
-        // muzzleFlash = GetComponent<GameObject>();
         _anim.Play("Idle");
     }
 
@@ -49,33 +44,10 @@ public class PlayerCtrl : MonoBehaviour
 
     private void StartPlayerAnim(float v, float h, float r)
     {
-        // if (Input.GetMouseButton(0))
-        // {
-        //     // if (Time.time - lastFireTime >= fireCooldown)
-        //     // {
-        //     //     // 발사 가능
-        //     //     lastFireTime = Time.time;
-        //     //
-        //     //     if (h != 0 || v != 0)
-        //     //         _anim.Play("RunFireSMG");
-        //     //     else
-        //     //         _anim.Play("IdleFireSMG");
-        //     //
-        //     //     // 여기에 총알 발사 코드도 추가하면 됩니다.
-        //     //     Debug.Log("발사!");
-        //     // }
-        //     // else
-        //     // {
-        //     //     Debug.Log("쿨타임 중입니다...");
-        //     // }
-        // }
-        // else
-        // {
-            if (v > 0) _anim.CrossFade("RunF", 0.25f);
-            else if (v < 0) _anim.CrossFade("RunB", 0.25f);
-            else if (h > 0||r<0) _anim.CrossFade("RunL", 0.25f);
-            else if (h < 0||r>0) _anim.CrossFade("RunR", 0.25f);
-            else _anim.CrossFade("Idle", 0.25f);
-        // }
+        if (v > 0) _anim.CrossFade("RunF", 0.25f);
+        else if (v < 0) _anim.CrossFade("RunB", 0.25f);
+        else if (h > 0||r<0) _anim.CrossFade("RunL", 0.25f);
+        else if (h < 0||r>0) _anim.CrossFade("RunR", 0.25f);
+        else _anim.CrossFade("Idle", 0.25f);
     }
 }
