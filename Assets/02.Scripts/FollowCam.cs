@@ -2,21 +2,18 @@ using UnityEngine;
 
 public class FollowCam : MonoBehaviour
 {
-    // [Range(12.0f, 42.0f)]
-    public float distance = 5.0f;
-
-    // [Range(9.0f, 39.0f)]
-    public float height = 3.0f;
-
-    [SerializeField] private float scrollSpeed = 10f;
-    public float smoothTime = 0.01f;
-
+    [Header("References")]
+    public GameObject player;
     private Transform _camTr;
     private Transform _playerTr;
+    
+    [Header("Attributes")]
+    [SerializeField]private float distance;
+    [SerializeField]private float height;
+    [SerializeField] private float scrollSpeed;
+    [SerializeField]private float smoothTime;
 
-    public GameObject player;
-
-    private Vector3 currentVelocity = Vector3.zero;
+    private Vector3 _currentVelocity = Vector3.zero;
 
     void Start()
     {
@@ -26,24 +23,21 @@ public class FollowCam : MonoBehaviour
 
     void LateUpdate()
     {
-        // 1. 목표 위치 계산 (플레이어의 뒷쪽 위)
-        Vector3 desiredPosition = _playerTr.position + _playerTr.up * height - _playerTr.forward * distance;
+        Vector3 desiredPosition = _playerTr.position + _playerTr.up * height - _playerTr.forward * distance;//SmoothDamp 적용한 카메라의 목적지
+        _camTr.position = Vector3.SmoothDamp(_camTr.position, desiredPosition, ref _currentVelocity, smoothTime);
 
-        // 2. 현재 위치에서 목표 위치로 부드럽게 이동
-        _camTr.position = Vector3.SmoothDamp(_camTr.position, desiredPosition, ref currentVelocity, smoothTime);
-
-        // 3. 카메라는 플레이어를 바라봄
-        Vector3 lookTarget = _playerTr.position + Vector3.up * 5f;
+        
+        Vector3 lookTarget = _playerTr.position + Vector3.up * 5f;//Offset -> Vector3.up * 5f
         _camTr.LookAt(lookTarget);
 
-        // 4. 마우스 스크롤로 거리, 높이 조절
+        //마우스 휠 이벤트 발생 시 카메라 확대/축소
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
         if (scrollInput != 0)
         {
             distance += -scrollInput * scrollSpeed;
             height += -scrollInput * scrollSpeed;
-            distance = Mathf.Clamp(distance, 12.0f, 42.0f);
-            height = Mathf.Clamp(height, 9.0f, 39.0f);
+            distance = Mathf.Clamp(distance, 13.0f, 43.0f);
+            height = Mathf.Clamp(height, 8.0f, 38.0f);
         }
     }
 }

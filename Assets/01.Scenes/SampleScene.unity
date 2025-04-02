@@ -1188,11 +1188,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 336bb5279baab4feda8ac6b8520b9b18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 209709094}
   distance: 13
   height: 8
   scrollSpeed: 0.1
-  smoothTime: 0.2
-  player: {fileID: 209709094}
+  smoothTime: 0.05
 --- !u!1001 &967432974
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1286,8 +1286,8 @@ Transform:
   m_GameObject: {fileID: 1029644487}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: -0, y: 0, z: 0.073}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1409919750}
@@ -1419,8 +1419,20 @@ PrefabInstance:
       value: Monster
       objectReference: {fileID: 0}
     - target: {fileID: 400064, guid: 114cb4bcf81314b65b611fcc4f346ee1, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 400064, guid: 114cb4bcf81314b65b611fcc4f346ee1, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 400064, guid: 114cb4bcf81314b65b611fcc4f346ee1, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 400064, guid: 114cb4bcf81314b65b611fcc4f346ee1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -9.39
       objectReference: {fileID: 0}
     - target: {fileID: 400064, guid: 114cb4bcf81314b65b611fcc4f346ee1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1428,7 +1440,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400064, guid: 114cb4bcf81314b65b611fcc4f346ee1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -22.23
       objectReference: {fileID: 0}
     - target: {fileID: 400064, guid: 114cb4bcf81314b65b611fcc4f346ee1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2190,10 +2202,10 @@ PrefabInstance:
       addedObject: {fileID: 209709095}
     - targetCorrespondingSourceObject: {fileID: 100046, guid: f3cd25b3bf53c4adaaf087d862e435e6, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 209709099}
+      addedObject: {fileID: 209709101}
     - targetCorrespondingSourceObject: {fileID: 100046, guid: f3cd25b3bf53c4adaaf087d862e435e6, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 209709101}
+      addedObject: {fileID: 209709099}
     - targetCorrespondingSourceObject: {fileID: 100046, guid: f3cd25b3bf53c4adaaf087d862e435e6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 209709103}
