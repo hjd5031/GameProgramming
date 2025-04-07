@@ -1,14 +1,18 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
+
 public class MonsterCtrl : MonoBehaviour
 {
 
     private Transform _playerTr;
     private NavMeshAgent _agent;
     private Animator _anim;
-    [SerializeField] private float traceDist = 10.0f;
-    [SerializeField] private float attackDist = 2.0f;
+    
+    [SerializeField] private float traceDist;
+    [SerializeField] private float attackDist;
+    private int _hp;
 
     private float _distance;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -17,36 +21,63 @@ public class MonsterCtrl : MonoBehaviour
         _playerTr = GameObject.FindWithTag("Player").GetComponent<Transform>();
         _agent = GetComponent<NavMeshAgent>();
         _anim = GetComponent<Animator>();
+        _hp = 50;
+        StartCoroutine(MonsterAnim());  // 한 번만 실행
     }
 
-    // Update is called once per frame
     void Update()
     {
-        _agent.SetDestination(_playerTr.position);
-        StartCoroutine(MonsterAnim());
-    }
+        Debug.Log(_hp);
+        _distance = Vector3.Distance(_playerTr.position, transform.position);
 
-    IEnumerator MonsterAnim()
+        if (_distance < traceDist && !_agent.isStopped && _hp != 0)
+        {
+            _agent.SetDestination(_playerTr.position);
+        }
+    }
+    void OnCollisionEnter(Collision collision)
     {
-        _distance = Vector3.Distance(_playerTr.position, _agent.destination);
-        yield return new WaitForSeconds(0.3f);
-        if (_agent.velocity == Vector3.zero)
+        if (collision.collider.CompareTag("Bullet") && _anim.GetBool("isDead") == false)//Bullet과 충돌 시 Barrel 체력--
         {
             _agent.isStopped = true;
-            _anim.SetBool("isTrace",false);
+            _anim.SetTrigger("Hit");
+            _hp--;
         }
+    }
+    IEnumerator MonsterAnim()
+    {
+        while (true)
+        {
+            _distance = Vector3.Distance(_playerTr.position, transform.position);
 
-        else if (_distance < traceDist)
-        {
-            _anim.SetBool("isTrace",true);
-        }
-        else if (_distance < attackDist)
-        {
-            _anim.SetBool("isAttack",true);
-        }
-        else if (_distance > attackDist)
-        {
-            _anim.SetBool("isAttack",false);
+            if (_distance <= traceDist)
+            {
+                _agent.isStopped = false;
+                _anim.SetBool("isTrace", true);
+            }
+            else
+            {
+                _agent.isStopped = true;
+                _anim.SetBool("isTrace", false);
+            }
+
+            if (_distance <= attackDist)
+            {
+                _agent.isStopped = true;
+                _anim.SetBool("isAttack", true);
+            }
+            else
+            {
+                _anim.SetBool("isAttack", false);
+            }
+
+            if (_hp <= 0)
+            {
+                _agent.isStopped = true;
+                _agent.baseOffset = -0.5f;
+                _anim.SetBool("isDead", true);
+            }
+            yield return new WaitForSeconds(0.3f);
         }
     }
 }
