@@ -6,11 +6,12 @@ public class RemoveBullet : MonoBehaviour
     private GameObject _spark;
     void OnCollisionEnter(Collision collision)
     {
+        // Transform parent = collision.transform;
         if (collision.collider.CompareTag("Bullet"))
         {
             ContactPoint cp = collision.GetContact(0);
             Quaternion rot = Quaternion.LookRotation(-cp.normal);
-            _spark = Instantiate(sparkEffect, cp.point, rot);
+            _spark = Instantiate(sparkEffect, cp.point, rot, transform);
             Destroy(_spark, 0.5f);
             Destroy(collision.gameObject);
         }
