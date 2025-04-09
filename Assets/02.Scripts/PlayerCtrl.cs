@@ -11,12 +11,17 @@ public class PlayerCtrl : MonoBehaviour
     [Header("Attributes")]
     [SerializeField]private float velocity;
     [SerializeField]private float rotationSpeed;
-    
+    public float currHp;
+    private readonly float InitHp = 100f;
+
+    public delegate void PlayerDieHandler();
+    public static event PlayerDieHandler OnPlayerDie;
     void Start()
     {
         _tr = GetComponent<Transform>();
         _anim = GetComponent<Animation>();
         _anim.Play("Idle");
+        currHp = InitHp;
     }
 
     void Update()
@@ -42,6 +47,34 @@ public class PlayerCtrl : MonoBehaviour
         StartPlayerAnim(v, h,r);
     }
 
+    void OnCollisionEnter(Collision coll)
+    {
+        Debug.Log("ishit");
+        if (coll.collider.CompareTag("Punch"))
+        {
+            currHp -= 10f;
+            Debug.Log(currHp);
+        }
+
+        if (currHp <= 0)
+        {
+            Debug.Log(currHp);
+
+            PlayerDie();
+        }
+    }
+
+    private void PlayerDie()
+    {
+        GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
+
+        foreach (GameObject monster in monsters)
+        {
+            monster.SendMessage("OnPlayerDie",SendMessageOptions.DontRequireReceiver);
+        }
+        // OnPlayerDie();
+
+    }
     private void StartPlayerAnim(float v, float h, float r)
     {
         if (v > 0) _anim.CrossFade("RunF", 0.25f);
@@ -50,4 +83,9 @@ public class PlayerCtrl : MonoBehaviour
         else if (h < 0||r>0) _anim.CrossFade("RunR", 0.25f);
         else _anim.CrossFade("Idle", 0.25f);
     }
+
+    // void PlayerDie()
+    // {
+    //     OnPlayerDie();
+    // }
 }
