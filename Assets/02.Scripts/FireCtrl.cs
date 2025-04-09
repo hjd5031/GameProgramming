@@ -38,11 +38,11 @@ public class FireCtrl : MonoBehaviour
                 _lastFireTime = Time.time;
 
                 FireBullet();
-                Debug.Log("발사!");
+                // Debug.Log("발사!");
             }
             else
             {
-                Debug.Log("쿨타임 중입니다...");
+                // Debug.Log("쿨타임 중입니다...");
             }
         }
     }
