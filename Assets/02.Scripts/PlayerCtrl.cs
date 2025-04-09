@@ -47,10 +47,10 @@ public class PlayerCtrl : MonoBehaviour
         StartPlayerAnim(v, h,r);
     }
 
-    void OnCollisionEnter(Collision coll)
+    void OnTriggerEnter(Collider other)
     {
         Debug.Log("ishit");
-        if (coll.collider.CompareTag("Punch"))
+        if (other.CompareTag("Punch"))
         {
             currHp -= 10f;
             Debug.Log(currHp);
@@ -83,7 +83,14 @@ public class PlayerCtrl : MonoBehaviour
         else if (h < 0||r>0) _anim.CrossFade("RunR", 0.25f);
         else _anim.CrossFade("Idle", 0.25f);
     }
-
+    void OnGUI()
+    {
+        GUI.Box(new Rect(10,10,100,25),"HP: "+currHp);
+        float size = 200f;
+        float posX = (Screen.width - size) / 2+100;
+        float posy = (Screen.height - size) / 2-150;
+        GUI.Label(new Rect(posX,posy,size,size),"+");
+    }
     // void PlayerDie()
     // {
     //     OnPlayerDie();
