@@ -9,7 +9,7 @@ public class MonsterCtrl : MonoBehaviour
     private Transform _playerTr;
     private NavMeshAgent _agent;
     private Animator _anim;
-    
+    private Collider _collider;
     [SerializeField] private float traceDist;
     [SerializeField] private float attackDist;
     private int _hp;
@@ -21,16 +21,17 @@ public class MonsterCtrl : MonoBehaviour
         _playerTr = GameObject.FindWithTag("Player").GetComponent<Transform>();
         _agent = GetComponent<NavMeshAgent>();
         _anim = GetComponent<Animator>();
+        _collider = GetComponent<Collider>();
         _hp = 100;
         StartCoroutine(MonsterAnim());  // 한 번만 실행
     }
 
     void Update()
     {
-        Debug.Log(_hp);
+        // Debug.Log(_hp);
         _distance = Vector3.Distance(_playerTr.position, transform.position);
 
-        if (_distance < traceDist && !_agent.isStopped && _hp != 0)
+        if (_distance < traceDist && !_agent.isStopped && _hp >= 0)
         {
             _agent.SetDestination(_playerTr.position);
         }
@@ -42,6 +43,18 @@ public class MonsterCtrl : MonoBehaviour
             _agent.isStopped = true;
             _anim.SetTrigger("Hit");
             _hp-=10;
+        }
+        if (_hp <= 0&& _anim.GetBool("isDead") == false)
+        {
+            StopAllCoroutines();
+            _agent.isStopped = true;
+            // _agent.baseOffset = -0.5f;
+            _anim.SetBool("isTrace", false);
+            _anim.SetBool("isAttack", false);
+            _anim.SetBool("isDead", true);
+            _anim.SetTrigger("Die");
+            _agent.isStopped = true;
+            _collider.enabled = false;
         }
     }
     IEnumerator MonsterAnim()
@@ -71,14 +84,11 @@ public class MonsterCtrl : MonoBehaviour
                 _anim.SetBool("isAttack", false);
             }
 
-            if (_hp <= 0)
-            {
-                _agent.isStopped = true;
-                // _agent.baseOffset = -0.5f;
-                _anim.SetBool("isDead", true);
-            }
+            
             yield return new WaitForSeconds(0.3f);
         }
+
+        yield break;
     }
 
     void OnEnable()
@@ -94,6 +104,9 @@ public class MonsterCtrl : MonoBehaviour
     void OnPlayerDie()
     {
         StopAllCoroutines();
+        _agent.isStopped = true;
+        float victorySpeed = Random.Range(1.0f, 2.0f);
+        _anim.SetFloat("Speed",victorySpeed);
         _anim.SetTrigger("PlayerDie");
     }
 }

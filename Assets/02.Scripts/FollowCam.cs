@@ -19,14 +19,20 @@ public class FollowCam : MonoBehaviour
     {
         _camTr = GetComponent<Transform>();
         _playerTr = player.transform;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void LateUpdate()
     {
-        Vector3 desiredPosition = _playerTr.position + _playerTr.up * height - _playerTr.forward * distance;//SmoothDamp 적용한 카메라의 목적지
+        Vector3 desiredPosition = _playerTr.position + _playerTr.up * height - _playerTr.forward * distance;
+
+        // 스테이지 범위 제한 (예: x: -50~50, z: -50~50)
+        desiredPosition.x = Mathf.Clamp(desiredPosition.x, -50f, 50f);
+        desiredPosition.z = Mathf.Clamp(desiredPosition.z, -50f, 50f);
+
         _camTr.position = Vector3.SmoothDamp(_camTr.position, desiredPosition, ref _currentVelocity, smoothTime);
 
-        
         Vector3 lookTarget = _playerTr.position + Vector3.up * 5f;//Offset -> Vector3.up * 5f
         _camTr.LookAt(lookTarget);
 
@@ -40,4 +46,6 @@ public class FollowCam : MonoBehaviour
             height = Mathf.Clamp(height, 8.0f, 38.0f);
         }
     }
+
+    
 }
