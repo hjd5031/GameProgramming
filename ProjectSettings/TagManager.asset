@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Bullet
   - Barrel
+  - Punch
+  - Monster
   layers:
   - Default
   - TransparentFX
@@ -13,8 +15,8 @@ TagManager:
   - Barrel
   - Water
   - UI
-  - 
-  - 
+  - MONSTER_BODY
+  - MONSTER_PUNCH
   - 
   - 
   - 

@@ -21,7 +21,7 @@ public class MonsterCtrl : MonoBehaviour
         _playerTr = GameObject.FindWithTag("Player").GetComponent<Transform>();
         _agent = GetComponent<NavMeshAgent>();
         _anim = GetComponent<Animator>();
-        _hp = 50;
+        _hp = 100;
         StartCoroutine(MonsterAnim());  // 한 번만 실행
     }
 
@@ -41,7 +41,7 @@ public class MonsterCtrl : MonoBehaviour
         {
             _agent.isStopped = true;
             _anim.SetTrigger("Hit");
-            _hp--;
+            _hp-=10;
         }
     }
     IEnumerator MonsterAnim()
@@ -74,10 +74,26 @@ public class MonsterCtrl : MonoBehaviour
             if (_hp <= 0)
             {
                 _agent.isStopped = true;
-                _agent.baseOffset = -0.5f;
+                // _agent.baseOffset = -0.5f;
                 _anim.SetBool("isDead", true);
             }
             yield return new WaitForSeconds(0.3f);
         }
+    }
+
+    void OnEnable()
+    {
+        PlayerCtrl.OnPlayerDie += this.OnPlayerDie;
+    }
+
+    void OnDisable()
+    {
+        PlayerCtrl.OnPlayerDie -= this.OnPlayerDie;
+    }
+
+    void OnPlayerDie()
+    {
+        StopAllCoroutines();
+        _anim.SetTrigger("PlayerDie");
     }
 }
