@@ -19,8 +19,8 @@ public class FollowCam : MonoBehaviour
     {
         _camTr = GetComponent<Transform>();
         _playerTr = player.transform;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.visible = false;
     }
 
     void LateUpdate()
