@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
     public Button startButton;
     public Button optionButton;
     public Button shopButton;
+    // public Image hpBar;
     private UnityAction _action;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
