@@ -1,12 +1,14 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class PlayerCtrl : MonoBehaviour
 {
     [Header("References")]
     private Transform _tr;
     private Animation _anim;
+    public Image hpBar;
      
     [Header("Attributes")]
     [SerializeField]private float velocity;
@@ -26,25 +28,31 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        float r = Input.GetAxis("Mouse X");
-
-        // 이동
-        if (h != 0 || v != 0)
+        if (!GameManager.Instance.IsGameOver)//GameOver시 플레이어 이동 제한
         {
-            Vector3 moveDirection = new Vector3(h, 0, v);
-            _tr.Translate(moveDirection * Time.deltaTime * velocity, Space.Self);
-        }
+            float h = Input.GetAxis("Horizontal");
+            float v = Input.GetAxis("Vertical");
+            float r = Input.GetAxis("Mouse X");
 
-        // 회전
-        if (r != 0)
-        {
-            _tr.Rotate(Vector3.up * r * Time.deltaTime * rotationSpeed);
-        }
+            // 이동
+            if (h != 0 || v != 0)
+            {
+                Vector3 moveDirection = new Vector3(h, 0, v);
+                _tr.Translate(moveDirection * Time.deltaTime * velocity, Space.Self);
+            }
 
-        // 애니메이션 처리
-        StartPlayerAnim(v, h,r);
+            // 회전
+            if (r != 0)
+            {
+                _tr.Rotate(Vector3.up * r * Time.deltaTime * rotationSpeed);
+            }
+
+            // 애니메이션 처리
+            StartPlayerAnim(v, h, r);
+            
+        }
+        //플레이어 체력바 처리
+        UpdatePlayerHp();
     }
 
     void OnTriggerEnter(Collider other)
@@ -53,27 +61,34 @@ public class PlayerCtrl : MonoBehaviour
         if (other.CompareTag("Punch"))
         {
             currHp -= 10f;
-            Debug.Log(currHp);
+            // Debug.Log(currHp);
         }
 
         if (currHp <= 0)
         {
-            Debug.Log(currHp);
-
+            currHp = 0;
+            // Debug.Log(currHp);
             PlayerDie();
         }
     }
 
+    void UpdatePlayerHp()
+    {
+        // Debug.Log(currHp);
+        hpBar.fillAmount = currHp/InitHp;
+        hpBar.color = new Color(1-currHp/InitHp, currHp/InitHp, 0f);
+    }
     private void PlayerDie()
     {
         GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
-
+        
         foreach (GameObject monster in monsters)
         {
             monster.SendMessage("OnPlayerDie",SendMessageOptions.DontRequireReceiver);
         }
-        // OnPlayerDie();
-
+        UIManager.Instance.ActivateGameOverPanel();//GameOver창 띄우기
+        GameManager.Instance.IsGameOver = true;
+        // OnPlayerDie?.Invoke();
     }
     private void StartPlayerAnim(float v, float h, float r)
     {
@@ -83,16 +98,4 @@ public class PlayerCtrl : MonoBehaviour
         else if (h < 0||r>0) _anim.CrossFade("RunR", 0.25f);
         else _anim.CrossFade("Idle", 0.25f);
     }
-    void OnGUI()
-    {
-        GUI.Box(new Rect(10,10,100,25),"HP: "+currHp);
-        float size = 200f;
-        float posX = (Screen.width - size) / 2+100;
-        float posy = (Screen.height - size) / 2-150;
-        GUI.Label(new Rect(posX,posy,size,size),"+");
-    }
-    // void PlayerDie()
-    // {
-    //     OnPlayerDie();
-    // }
 }
